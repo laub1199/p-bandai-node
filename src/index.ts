@@ -1,24 +1,7 @@
-import { Regions } from './types'
+import { IDeadline, INewArrival, Regions } from './types'
 import axios, { AxiosInstance } from 'axios'
 import * as cheerio from 'cheerio'
-
-const pBandaiUrls = {
-  sg: 'https://p-bandai.com',
-  hk: 'https://p-bandai.com',
-  mo: 'https://p-bandai.com',
-  tw: 'https://p-bandai.com',
-  us: 'https://p-bandai.com',
-  jp: 'https://p-bandai.jp',
-}
-
-const pBandaiSuffix = {
-  sg: '/sg',
-  hk: '/hk',
-  mo: '/hk',
-  tw: '/tw',
-  us: '/us',
-  jp: '',
-}
+import { dateFormatter, pBandaiSuffix, pBandaiUrls } from './utils'
 
 export class PBandai {
   private readonly region: Regions
@@ -41,21 +24,55 @@ export class PBandai {
     return cheerio.load(web.data)
   }
 
-  public async getNewArrivals(): Promise<any> {
+  public async getNewArrivals(numberOfItems?: number): Promise<INewArrival[]> {
     const $ = await this.getWebData()
 
     const newArrivalSection = $('.o-grid--newarrival')
 
     const newArrivalItems = newArrivalSection.find('a.m-card').map((i, el) => {
+      const name = $(el).find('.m-card__name').text()
+      const price = $(el).find('.m-card__price').text()
+      const image = $(el).find('img').attr('src')
+      const link = `${this.baseUrl}${$(el).attr('href')}`
+      const releaseDate = $(el).find('.m-card__release').text()
+
       return {
-        name: $(el).find('.m-card__name').text(),
-        price: $(el).find('.m-card__price').text(),
-        image: $(el).find('img').attr('src'),
-        link: `${this.baseUrl}${$(el).attr('href')}`,
-        releaseDate: $(el).find('.m-card__release').text(),
+        name,
+        price,
+        image,
+        link,
+        releaseDate: releaseDate ? dateFormatter(releaseDate) : null,
       }
     })
 
-    return newArrivalItems.get()
+    const data = newArrivalItems.get()
+
+    return data.slice(0, numberOfItems ? numberOfItems : data.length) as INewArrival[]
+  }
+
+  public async getDeadlines(numberOfItems?: number): Promise<IDeadline[]> {
+    const $ = await this.getWebData()
+
+    const deadlineSection = $('.o-grid--deadline')
+
+    const deadlineItems = deadlineSection.find('a.m-card').map((i, el) => {
+      const name = $(el).find('.m-card__name').text()
+      const price = $(el).find('.m-card__price').text()
+      const image = $(el).find('img').attr('src')
+      const link = `${this.baseUrl}${$(el).attr('href')}`
+      const deadline = $(el).find('.m-card__deadline').text()
+
+      return {
+        name,
+        price,
+        image,
+        link,
+        deadline: deadline ? dateFormatter(deadline) : null,
+      }
+    })
+
+    const data = deadlineItems.get()
+
+    return data.slice(0, numberOfItems ? numberOfItems : data.length) as IDeadline[]
   }
 }

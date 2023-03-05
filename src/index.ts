@@ -30,11 +30,11 @@ export class PBandai {
     const newArrivalSection = $('.o-grid--newarrival')
 
     const newArrivalItems = newArrivalSection.find('a.m-card').map((i, el) => {
-      const name = $(el).find('.m-card__name').text()
-      const price = $(el).find('.m-card__price').text()
+      const name = $(el).find('.m-card__overlay .m-card__name').text()
+      const price = $(el).find('.m-card__overlay .m-card__price').text()
       const image = $(el).find('img').attr('src')
       const link = `${this.baseUrl}${$(el).attr('href')}`
-      const releaseDate = $(el).find('.m-card__release').text()
+      const releaseDate = $(el).find('.m-card__overlay .m-card__release').text()
 
       return {
         name,
@@ -56,11 +56,11 @@ export class PBandai {
     const deadlineSection = $('.o-grid--deadline')
 
     const deadlineItems = deadlineSection.find('a.m-card').map((i, el) => {
-      const name = $(el).find('.m-card__name').text()
-      const price = $(el).find('.m-card__price').text()
+      const name = $(el).find('.m-card__overlay .m-card__name').text()
+      const price = $(el).find('.m-card__overlay .m-card__price').text()
       const image = $(el).find('img').attr('src')
       const link = `${this.baseUrl}${$(el).attr('href')}`
-      const deadline = $(el).find('.m-card__deadline').text()
+      const deadline = $(el).find('.m-card__overlay .m-card__deadline').text()
 
       return {
         name,

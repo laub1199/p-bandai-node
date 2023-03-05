@@ -1,0 +1,32 @@
+{
+  "name": "@laub1199/p-bandai-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laub1199/p-bandai-node.git"
+  },
+  "keywords": [],
+  "author": "Sennett Lau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/laub1199/p-bandai-node/issues"
+  },
+  "homepage": "https://github.com/laub1199/p-bandai-node#readme",
+  "devDependencies": {
+    "@types/node": "^18.14.6",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "axios": "^1.3.4",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}

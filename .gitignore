@@ -1,0 +1,11 @@
+# Node JS
+node_modules
+
+# Visual Studio Code
+.vscode
+
+# MacOS
+.DS_Store
+
+# IdeaIDE
+.idea

@@ -21,3 +21,10 @@ export interface INewArrival extends IProduct {
 export interface IDeadline extends IProduct {
   deadline: Date | null
 }
+
+export interface INews {
+  title: string
+  date: Date
+  link: string
+  label: string
+}

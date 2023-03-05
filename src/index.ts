@@ -1,7 +1,7 @@
-import { IDeadline, INewArrival, Regions } from './types'
+import { IDeadline, INewArrival, INews, Regions } from './types'
 import axios, { AxiosInstance } from 'axios'
 import * as cheerio from 'cheerio'
-import { dateFormatter, pBandaiSuffix, pBandaiUrls } from './utils'
+import { dateFormatter, dateTimeFormatter, pBandaiSuffix, pBandaiUrls } from './utils'
 
 export class PBandai {
   private readonly region: Regions
@@ -41,7 +41,7 @@ export class PBandai {
         price,
         image,
         link,
-        releaseDate: releaseDate ? dateFormatter(releaseDate) : null,
+        releaseDate: releaseDate ? dateTimeFormatter(releaseDate) : null,
       }
     })
 
@@ -67,12 +67,36 @@ export class PBandai {
         price,
         image,
         link,
-        deadline: deadline ? dateFormatter(deadline) : null,
+        deadline: deadline ? dateTimeFormatter(deadline) : null,
       }
     })
 
     const data = deadlineItems.get()
 
     return data.slice(0, numberOfItems ? numberOfItems : data.length) as IDeadline[]
+  }
+
+  public async getNews(numberOfItems?: number): Promise<INews[]> {
+    const $ = await this.getWebData()
+
+    const newsSection = $('.o-news-list')
+
+    const newsItems = newsSection.find('a.m-news').map((i, el) => {
+      const title = $(el).find('.m-news__title p').text()
+      const date = $(el).find('time').text()
+      const link = `${this.baseUrl}${$(el).attr('href')}`
+      const label = $(el).find('.m-news__label span').text()
+
+      return {
+        title,
+        date: dateFormatter(date),
+        link,
+        label,
+      }
+    })
+
+    const data = newsItems.get()
+
+    return data.slice(0, numberOfItems ? numberOfItems : data.length) as INews[]
   }
 }

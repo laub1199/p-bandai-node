@@ -28,3 +28,9 @@ export interface INews {
   link: string
   label: string
 }
+
+export interface ICampaign {
+  link: string
+  image: string
+  alt: string
+}

@@ -1,4 +1,4 @@
-import { IDeadline, INewArrival, INews, Regions } from './types'
+import { ICampaign, IDeadline, INewArrival, INews, Regions } from './types'
 import axios, { AxiosInstance } from 'axios'
 import * as cheerio from 'cheerio'
 import { dateFormatter, dateTimeFormatter, pBandaiSuffix, pBandaiUrls } from './utils'
@@ -98,5 +98,26 @@ export class PBandai {
     const data = newsItems.get()
 
     return data.slice(0, numberOfItems ? numberOfItems : data.length) as INews[]
+  }
+  public async getCampaigns(numberOfItems?: number): Promise<ICampaign[]> {
+    const $ = await this.getWebData()
+
+    const campaignSection = $('.o-campaign')
+
+    const campaignItems = campaignSection.find('a.m-campaign').map((i, el) => {
+      const link = $(el).attr('href')
+      const image = `${this.baseUrl}${$(el).find('img').attr('src')}`
+      const alt = $(el).find('img').attr('alt')
+
+      return {
+        link,
+        image,
+        alt,
+      }
+    })
+
+    const data = campaignItems.get()
+
+    return data.slice(0, numberOfItems ? numberOfItems : data.length) as ICampaign[]
   }
 }

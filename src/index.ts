@@ -84,7 +84,7 @@ export class PBandai {
     const newsItems = newsSection.find('a.m-news').map((i, el) => {
       const title = $(el).find('.m-news__title p').text()
       const date = $(el).find('time').text()
-      const link = `${this.baseUrl}${$(el).attr('href')}`
+      const link = $(el).attr('href')
       const label = $(el).find('.m-news__label span').text()
 
       return {

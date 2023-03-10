@@ -34,3 +34,10 @@ export interface ICampaign {
   image: string
   alt: string
 }
+
+export interface IShop {
+  name: string
+  link: string
+  image: string
+  description: string
+}

@@ -1,4 +1,4 @@
-import { ICampaign, IDeadline, INewArrival, INews, Regions } from './types'
+import { ICampaign, IDeadline, INewArrival, INews, IShop, Regions } from './types'
 import axios, { AxiosInstance } from 'axios'
 import * as cheerio from 'cheerio'
 import { dateFormatter, dateTimeFormatter, pBandaiSuffix, pBandaiUrls } from './utils'
@@ -18,8 +18,8 @@ export class PBandai {
     })
   }
 
-  private async getWebData(): Promise<cheerio.CheerioAPI> {
-    const web = await this.apiInstance.get('')
+  private async getWebData(path: string = ''): Promise<cheerio.CheerioAPI> {
+    const web = await this.apiInstance.get(path)
 
     return cheerio.load(web.data)
   }
@@ -119,5 +119,29 @@ export class PBandai {
     const data = campaignItems.get()
 
     return data.slice(0, numberOfItems ? numberOfItems : data.length) as ICampaign[]
+  }
+
+  public async getShopList(): Promise<IShop[]> {
+    const $ = await this.getWebData('/cont/shop')
+
+    const shopList = $('.m-shop__list')
+
+    const shopItems = shopList.find('a').map((i, el) => {
+      const link = `${this.baseUrl}${$(el).attr('href')}`
+      const image = `${this.baseUrl}${$(el).find('.m-shop__image img:first-child').attr('src')}`
+      const name = $(el).find('.m-shop__heading').text()
+      const description = $(el).find('.m-shop__description').text().replace('<br>', '\n')
+
+      return {
+        link,
+        image,
+        name,
+        description,
+      }
+    })
+
+    const data = shopItems.get()
+
+    return data as IShop[]
   }
 }
